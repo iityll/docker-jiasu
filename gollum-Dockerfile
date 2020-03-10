@@ -1,0 +1,26 @@
+FROM registry.docker-cn.com/library/ruby:2.4.1-alpine
+MAINTAINER iit <750733464@qq.com>
+RUN set -xe \
+&& echo "https://mirrors.aliyun.com/alpine/v3.4/main" > /etc/apk/repositories \
+&& echo "https://mirrors.aliyun.com/alpine/v3.4/community" >> /etc/apk/repositories \
+&& apk --update add alpine-sdk icu-dev git rsync openssh \
+&& gem install gollum github-markdown \
+&& rm -rf /var/cache/apk/* \
+&& mkdir -p /gollum/ \
+&& git init /gollum/
+# Expose default gollum port 4567
+EXPOSE 4567
+
+ENTRYPOINT ["/usr/local/bundle/bin/gollum", "/gollum/"]
+
+#README.md
+#可以下载该仓库，然后直接执行docker bild即可，例子如下：
+
+#docker build -t registry.cn-hangzhou.aliyuncs.com/ilanni/gollum ./
+#docker push registry.cn-hangzhou.aliyuncs.com/ilanni/gollum
+#docker push完毕后。我们可以使用如下命令运行该镜像：
+
+#docker run -d -it --name gollum -P -p 8080:4567 -v /gollum/qjd_wiki:/gollum/ --privileged=true ilanni/gollum --allow-uploads --live-preview
+#注意：上述运行命令中 --privileged=true 特权模式一定要加上否则，会报无法创建目录的权限错误。 如果要禁用web页面的编辑功能的话，需要加入--no-edit选项，如下：
+
+#docker run -d -it --name gollum -P -p 8080:4567 -v /gollum/qjd_wiki:/gollum/ --privileged=true ilanni/gollum --allow-uploads --live-preview --no-edit
