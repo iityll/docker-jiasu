@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-MAINTAINER 烂泥行天下 <ilanni@ilanni.com>
+MAINTAINER Yang-iit <750733464@qq.com>
 
 RUN apk –no-cache add wget curl
 
